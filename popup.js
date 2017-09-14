@@ -34,11 +34,11 @@
      * @param {H5P.jQuery[]} imgs
      * @param {function} done
      */
-    self.show = function (desc, imgs, styles, done) {
+    self.show = function (desc, imgs, done) {
       $desc.html(desc);
       $top.html('').toggleClass('h5p-image-two-images', imgs.length > 1);
       for (var i = 0; i < imgs.length; i++) {
-        $('<div class="h5p-image-image"' + (styles ? styles : '') + '></div>').append(imgs[i]).appendTo($top);
+        $('<div class="h5p-image-image"></div>').append(imgs[i]).appendTo($top);
       }
       $popup.show();
       closed = done;

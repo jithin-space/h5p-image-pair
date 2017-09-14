@@ -10,7 +10,7 @@
    * @param {string} [description]
    * @param {Object} [styles]
    */
-  ImagePair.Card = function (image, id, description, styles) {
+  ImagePair.Card = function (image, id, description) {
     /** @alias H5P.ImagePair.Card# */
     var self = this;
 
@@ -63,9 +63,11 @@
     /**
      * Reset card to natural state
      */
-    // self.reset = function () {
-    //   $card[0].classList.remove('h5p-selected', 'h5p-matched');
-    // };
+    self.reset = function () {
+      self.$card.find('.pairing-mark').removeClass('pairing-mark-matched');
+      self.$card[0].classList.remove('pairing-item-matched', 'pairing-item-selected');
+      self.$card.find('.image-matched').removeClass('image-matched').addClass('image-unmatched');
+    };
 
     /**
      * Get card description.
@@ -140,10 +142,28 @@
     /**
      * Re-append to parent container
      */
-    // self.reAppend = function () {
-    //   var parent = $card[0].parentElement.parentElement;
-    //   parent.appendChild($card[0].parentElement);
-    // };
+    self.reAppend = function ($container) {
+
+      self.$card = $('<li class="pairing-item " >' +
+        '<span class="pairing-mark"></span>' +
+        '<div class="h5p-image-card">' +
+        '<div class="image-unmatched">'+
+        '<img src="' + path + '" alt="' + description + '"/>' +
+        '</div>'+
+        '<div class="image-matched">'+
+        '<img src="' + path + '" alt="' + description + '"/>' +
+        '</div>'+
+        '</div>' +
+        '</li>').appendTo($container);
+       self.$card.children('.h5p-image-card')
+        .children('.image-unmatched')
+        .click(function(){
+          self.trigger('selected');
+        })
+        .end();
+
+
+    };
   };
 
   // Extends the event dispatcher

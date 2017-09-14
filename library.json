@@ -10,12 +10,12 @@
   "machineName": "H5P.ImagePair",
   "preloadedCss": [
     {
-      "path": "memory-game.css"
+      "path": "image-pair.css"
     }
   ],
   "preloadedJs": [
     {
-      "path": "memory-game.js"
+      "path": "image-pair.js"
     },
     {
       "path": "card.js"

@@ -56,14 +56,6 @@
     "optional": true,
     "fields": [
       {
-        "name": "useGrid",
-        "type": "boolean",
-        "label": "Position the cards in a square",
-        "description": "Will try to match the number of columns and rows when laying out the cards. Afterward, the cards will be scaled to fit the container.",
-        "importance": "low",
-        "default": true
-      },
-      {
         "name": "numCardsToUse",
         "type": "number",
         "label": "Number of cards to use",
@@ -81,38 +73,7 @@
       }
     ]
   },
-  {
-    "name": "lookNFeel",
-    "type": "group",
-    "label": "Look and feel",
-    "importance": "low",
-    "description": "Control the visuals of the game.",
-    "optional": true,
-    "fields": [
-      {
-        "name": "themeColor",
-        "type": "text",
-        "label": "Theme Color",
-        "importance": "low",
-        "description": "Choose a color to create a theme for your card game.",
-        "optional": true,
-        "default": "#909090",
-        "widget": "colorSelector",
-        "spectrum": {
-          "showInput": true
-        }
-      },
-      {
-        "name": "cardBack",
-        "type": "image",
-        "label": "Card Back",
-        "importance": "low",
-        "optional": true,
-        "description": "Use a custom back for your cards.",
-        "ratio": 1
-      }
-    ]
-  },
+
   {
     "label": "Localization",
     "importance": "low",
@@ -121,11 +82,11 @@
     "common": true,
     "fields": [
       {
-        "label": "Card turns text",
+        "label": "Card Clicks text",
         "importance": "low",
         "name": "cardTurns",
         "type": "text",
-        "default": "Card turns"
+        "default": "Card Clicks"
       },
       {
         "label": "Time spent text",
