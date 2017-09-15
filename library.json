@@ -1,57 +1,57 @@
 {
-  "title": "Image Pair",
-  "description": "Pair appropriate images",
-  "majorVersion": 1,
-  "minorVersion": 1,
-  "patchVersion": 0,
-  "runnable": 1,
-  "author": "JithinSpace",
-  "license": "MIT",
-  "machineName": "H5P.ImagePair",
-  "preloadedCss": [
+  "title":"Image Pair",
+  "description":"Pair appropriate images",
+  "majorVersion":1,
+  "minorVersion":1,
+  "patchVersion":0,
+  "runnable":1,
+  "author":"JithinSpace",
+  "license":"MIT",
+  "machineName":"H5P.ImagePair",
+  "preloadedCss":[
     {
-      "path": "image-pair.css"
+      "path":"image-pair.css"
     }
   ],
-  "preloadedJs": [
+  "preloadedJs":[
     {
-      "path": "image-pair.js"
+      "path":"image-pair.js"
     },
     {
-      "path": "card.js"
+      "path":"card.js"
     },
     {
-      "path": "counter.js"
+      "path":"counter.js"
     },
     {
-      "path": "popup.js"
+      "path":"popup.js"
     },
     {
-      "path": "timer.js"
+      "path":"timer.js"
     }
   ],
-  "preloadedDependencies": [
+  "preloadedDependencies":[
     {
-      "machineName": "H5P.Timer",
-      "majorVersion": 0,
-      "minorVersion": 4
+      "machineName":"H5P.Timer",
+      "majorVersion":0,
+      "minorVersion":4
     },
     {
-      "machineName": "FontAwesome",
-      "majorVersion": 4,
-      "minorVersion": 5
+      "machineName":"FontAwesome",
+      "majorVersion":4,
+      "minorVersion":5
     }
   ],
-  "editorDependencies": [
+  "editorDependencies":[
     {
-      "machineName": "H5PEditor.ColorSelector",
-      "majorVersion": 1,
-      "minorVersion": 2
+      "machineName":"H5PEditor.ColorSelector",
+      "majorVersion":1,
+      "minorVersion":2
     },
     {
-      "machineName": "H5PEditor.VerticalTabs",
-      "majorVersion": 1,
-      "minorVersion": 3
+      "machineName":"H5PEditor.VerticalTabs",
+      "majorVersion":1,
+      "minorVersion":3
     }
   ]
 }

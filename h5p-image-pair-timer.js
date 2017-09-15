@@ -1,4 +1,4 @@
-(function (ImagePair, Timer) {
+(function(ImagePair, Timer) {
 
   /**
    * Adapter between image game and H5P.Timer
@@ -7,7 +7,7 @@
    * @extends H5P.Timer
    * @param {Element} element
    */
-  ImagePair.Timer = function (element) {
+  ImagePair.Timer = function(element) {
     /** @alias H5P.ImagePair.Timer# */
     var self = this;
 
@@ -23,7 +23,7 @@
      *
      * @private
      */
-    var update = function () {
+    var update = function() {
       var time = self.getTime();
 
       var minutes = Timer.extractTimeElement(time, 'minutes');
@@ -37,7 +37,7 @@
 
     // Setup default behavior
     self.notify('every_tenth_second', update);
-    self.on('reset', function () {
+    self.on('reset', function() {
       element.innerText = naturalState;
       self.notify('every_tenth_second', update);
     });

@@ -1,91 +1,91 @@
-H5P.ImagePair = (function (EventDispatcher, $) {
+H5P.ImagePair = (function(EventDispatcher, $) {
+
+  /**
+   * @class H5P.ImagePair
+   * @param {Object} params
+   */
 
   function ImagePair(parameters, id) {
 
     var self = this;
     EventDispatcher.call(self);
 
-    var clicked,timer,counter,popup;
+    var clicked, timer, counter, popup;
     var cards = [];
     var numClicks = 0;
     var revertBacks = [];
     var removed = 0;
 
-    var processRevertBacks = function () {
+    /**
+     * Revert the Incorrectly Selected Cards To Default State
+     */
+
+    var processRevertBacks = function() {
       revertBacks[0].revertBack();
       revertBacks[1].revertBack();
       revertBacks.splice(0, 2);
       numClicks -= 2;
     };
 
-    var check = function (card, mate, correct) {
+    /**
+     * Check two selected cards are correct
+     */
+
+
+    var check = function(card, mate, correct) {
       if (mate !== correct) {
         // Incorrect, must be scheduled for flipping back
         card.setIncorrect();
         mate.setIncorrect();
         revertBacks.push(card);
         revertBacks.push(mate);
-
-        // Wait for next click to flip them back…
-        // if (numClicks > 2) {
-          // or do it straight away
-          // processRevertBacks();
-        // }
-
-        setTimeout(function(){
+        setTimeout(function() {
           processRevertBacks();
-        },800);
+        }, 800);
         return;
       }
 
       // Remove them from the game.
       card.remove();
       mate.remove();
-      //
-      // // Update counters
       numClicks -= 2;
       removed += 2;
-      //
       var isFinished = (removed === cards.length);
       var desc = card.getDescription();
-      //
       if (desc !== undefined) {
-      //   // Pause timer and show desciption.
         timer.pause();
-         var imgs = [card.getImage()];
+        var imgs = [card.getImage()];
         if (card.hasTwoImages) {
           imgs.push(mate.getImage());
         }
-        popup.show(desc, imgs, function () {
+        popup.show(desc, imgs, function() {
           if (isFinished) {
             // Game done
-             finished();
-          }
-          else {
+            finished();
+          } else {
             // Popup is closed, continue.
             timer.play();
           }
         });
-       }
-      else if (isFinished) {
-        // Game done
-
-        // alert("gamefinished");
+      } else if (isFinished) {
         finished();
       }
     };
 
+    /**
+     * When the Image Pairing Game is Finished
+     * Show feedback and create a retry button
+     */
     var finished = function() {
       timer.stop();
       $feedback.addClass('h5p-show');
 
       if (parameters.behaviour && parameters.behaviour.allowRetry) {
         // Create retry button
-        var retryButton = createButton('reset', parameters.l10n.tryAgain || 'Reset', function () {
-          // Trigger handler (action)
+        var retryButton = createButton('reset', parameters.l10n.tryAgain || 'Reset', function() {
 
           retryButton.classList.add('h5p-image-transout');
-          setTimeout(function () {
+          setTimeout(function() {
             // Remove button on nextTick to get transition effect
             self.$wrapper[0].removeChild(retryButton);
           }, 300);
@@ -93,29 +93,26 @@ H5P.ImagePair = (function (EventDispatcher, $) {
           resetGame();
         });
         retryButton.classList.add('h5p-image-transin');
-        setTimeout(function () {
+        setTimeout(function() {
           // Remove class on nextTick to get transition effect
           retryButton.classList.remove('h5p-image-transin');
         }, 0);
-
-        // Same size as cards
-        retryButton.style.fontSize = (parseFloat(self.$wrapper.children('ul')[0].style.fontSize) * 0.75) + 'px';
 
         self.$wrapper[0].appendChild(retryButton); // Add to DOM
       }
 
     }
 
-    var createButton = function (name, label, action) {
+    var createButton = function(name, label, action) {
       var buttonElement = document.createElement('div');
-      buttonElement.classList.add('h5p-image-' + name);
+      buttonElement.classList.add('h5p-image-pair-' + name);
       buttonElement.innerHTML = label;
       buttonElement.setAttribute('role', 'button');
       buttonElement.tabIndex = 0;
-      buttonElement.addEventListener('click', function (event) {
+      buttonElement.addEventListener('click', function(event) {
         action.apply(buttonElement);
       }, false);
-      buttonElement.addEventListener('keypress', function (event) {
+      buttonElement.addEventListener('keypress', function(event) {
         if (event.which === 13 || event.which === 32) { // Enter or Space key
           event.preventDefault();
           action.apply(buttonElement);
@@ -124,87 +121,68 @@ H5P.ImagePair = (function (EventDispatcher, $) {
       return buttonElement;
     };
 
-    var resetGame = function () {
-
-      // Reset cards
+    var resetGame = function()  {
       removed = 0;
       for (var i = 0; i < cards.length; i++) {
         cards[i].reset();
       }
 
-      // Remove feedback
       $feedback[0].classList.remove('h5p-show');
-
-      // Reset timer and counter
       timer.reset();
       counter.reset();
-
-      // Randomize cards
       H5P.shuffleArray(cards);
 
       self.$list.empty();
 
 
-        for (var i = 0; i < cards.length; i++) {
-          cards[i].reAppend(self.$list);
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].appendTo(self.$list);
+      }
+
+
+    };
+
+
+
+    var addCard = function(card, mate) {
+      card.on('selected', function() {
+        card.setSelected();
+        timer.play();
+        numClicks++;
+        if (clicked !== undefined) {
+          var matie = clicked;
+          clicked = undefined;
+          setTimeout(function() {
+            check(card, matie, mate);
+          }, 800);
+        } else {
+          clicked = card;
         }
 
-
-    };
-
-
-
-    var addCard = function( card,mate){
-
-      card.on('selected',function(){
-          self.triggerXAPI('interacted');
-          card.setSelected();
-          timer.play();
-
-          numClicks++;
-
-          if (clicked !== undefined){
-            var matie = clicked;
-            clicked = undefined;
-            setTimeout(function(){
-              check(card,matie,mate);
-            },800);
-          }
-          else{
-
-            clicked = card;
-          }
-
-          counter.increment();
+        counter.increment();
       });
-
       cards.push(card);
-
     };
 
-    var getCardsToUse = function () {
+    var getCardsToUse = function() {
       var numCardsToUse = (parameters.behaviour && parameters.behaviour.numCardsToUse ? parseInt(parameters.behaviour.numCardsToUse) : 0);
       if (numCardsToUse <= 2 || numCardsToUse >= parameters.cards.length) {
         // Use all cards
         return parameters.cards;
       }
-
       // Pick random cards from pool
       var cardsToUse = [];
       var pickedCardsMap = {};
-
       var numPicket = 0;
       while (numPicket < numCardsToUse) {
         var pickIndex = Math.floor(Math.random() * parameters.cards.length);
         if (pickedCardsMap[pickIndex]) {
           continue; // Already picked, try again!
         }
-
         cardsToUse.push(parameters.cards[pickIndex]);
         pickedCardsMap[pickIndex] = true;
         numPicket++;
       }
-
       return cardsToUse;
     };
 
@@ -221,8 +199,7 @@ H5P.ImagePair = (function (EventDispatcher, $) {
           // Use matching image for card two
           cardTwo = new ImagePair.Card(cardParams.match, id, cardParams.description);
           cardOne.hasTwoImages = cardTwo.hasTwoImages = true;
-        }
-        else {
+        } else {
           // Add two cards with the same image
           cardTwo = new ImagePair.Card(cardParams.image, id, cardParams.description);
         }
@@ -235,37 +212,35 @@ H5P.ImagePair = (function (EventDispatcher, $) {
 
     H5P.shuffleArray(cards);
 
-    self.attach = function($container){
+    self.attach = function($container) {
       self.$wrapper = $container.addClass('h5p-image-pair').html('');
-       self.$list = $('<ul />');
+      $('<div class="h5p-task-description">' + parameters.taskDescription + '</div>').appendTo($container);
+      self.$list = $('<ul />');
       for (var i = 0; i < cards.length; i++) {
         cards[i].appendTo(self.$list);
       }
 
-      if(self.$list.children().length){
+      if (self.$list.children().length) {
         self.$list.appendTo($container);
         $feedback = $('<div class="h5p-feedback">' + parameters.l10n.feedback + '</div>').appendTo($container);
 
         // Add status bar
         var $status = $('<dl class="h5p-status">' +
-                        '<dt>' + parameters.l10n.timeSpent + '</dt>' +
-                        '<dd class="h5p-time-spent">0:00</dd>' +
-                        '<dt>' + parameters.l10n.cardTurns + '</dt>' +
-                        '<dd class="h5p-card-turns">0</dd>' +
-                        '</dl>').appendTo($container);
+          '<dt>' + parameters.l10n.timeSpent + '</dt>' +
+          '<dd class="h5p-time-spent">0:00</dd>' +
+          '<dt>' + parameters.l10n.cardTurns + '</dt>' +
+          '<dd class="h5p-card-turns">0</dd>' +
+          '</dl>').appendTo($container);
 
         counter = new ImagePair.Counter($status.find('.h5p-card-turns'));
         timer = new ImagePair.Timer($status.find('.h5p-time-spent')[0]);
-        popup = new ImagePair.Popup($container,parameters.l10n);
+        popup = new ImagePair.Popup($container, parameters.l10n);
 
-        $container.click(function () {
+        $container.click(function() {
           popup.close();
         });
       }
-
     }
-
-
   };
 
   return ImagePair;
