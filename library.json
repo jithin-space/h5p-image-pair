@@ -10,24 +10,24 @@
   "machineName":"H5P.ImagePair",
   "preloadedCss":[
     {
-      "path":"image-pair.css"
+      "path":"h5p-image-pair.css"
     }
   ],
   "preloadedJs":[
     {
-      "path":"image-pair.js"
+      "path":"h5p-image-pair.js"
     },
     {
-      "path":"card.js"
+      "path":"h5p-image-pair-card.js"
     },
     {
-      "path":"counter.js"
+      "path":"h5p-image-pair-counter.js"
     },
     {
-      "path":"popup.js"
+      "path":"h5p-image-pair-popup.js"
     },
     {
-      "path":"timer.js"
+      "path":"h5p-image-pair-timer.js"
     }
   ],
   "preloadedDependencies":[

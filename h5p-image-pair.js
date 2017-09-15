@@ -243,5 +243,10 @@ H5P.ImagePair = (function(EventDispatcher, $) {
     }
   };
 
+
+  ImagePair.prototype = Object.create(EventDispatcher.prototype);
+  ImagePair.prototype.constructor = ImagePair;
+
+
   return ImagePair;
 })(H5P.EventDispatcher, H5P.jQuery);
