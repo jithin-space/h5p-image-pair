@@ -122,6 +122,13 @@
         "name":"closeLabel",
         "type":"text",
         "default":"Close"
+      },
+      {
+        "label":"Check Button Text",
+        "importance":"low",
+        "name":"checkAnswer",
+        "type":"text",
+        "default":"Check"
       }
     ]
   }

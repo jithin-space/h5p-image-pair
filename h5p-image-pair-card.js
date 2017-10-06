@@ -66,7 +66,11 @@
      * Set a card to selected state
      */
     self.setSelected = function() {
-      self.$card.addClass('h5p-image-pair-item-selected');
+      self.$card.addClass('item-selected');
+    }
+
+    self.removeSelection = function(){
+      self.$card.removeClass('item-selected');
     }
 
     /**
@@ -77,6 +81,71 @@
       self.$card.find('.h5p-image-pair-mark').addClass('h5p-image-pair-mark-incorrect');
     }
 
+    self.pair = function(pair){
+      self.srcImage = (self.srcImage)? self.srcImage:self.getImage();
+      self.$top = self.$card;
+      self.$top.html('').toggleClass('h5p-pair-images',true);
+      $('<span class="pairing-mark"></span>').appendTo(self.$top);
+      $('<div class="h5p-popup-image front"></div>').append(pair.getImage()).appendTo(self.$top);
+      $('<div class="h5p-popup-image"></div>').append(self.srcImage).appendTo(self.$top);
+      self.$card.replaceWith(self.$top);
+      self.currentPair = pair;
+
+      self.$top.children('.h5p-popup-image').on('click', function(){
+        pair.$card.removeClass('disabled');
+        self.detach();
+       });
+
+      self.$top.children('.h5p-popup-image').hover(function(){
+        self.$top.removeClass('item-hover');
+        $(this).addClass('item-hover');
+      }, function(){
+        $(this).removeClass('item-hover');
+      });
+
+
+    }
+
+    self.detach = function(){
+      self.$card.removeClass('h5p-pair-images').empty();
+      $('<div class="image-container"></div>').append(self.srcImage).appendTo(self.$card);
+      self.$card.removeClass('reducer').droppable( "option", "disabled", false);
+      self.trigger('unpair');
+    }
+
+    self.disable = function(){
+      self.$card.removeClass('item-selected').addClass('disabled');
+
+    }
+
+    self.setCorrect = function(){
+
+      self.$top.children('.pairing-mark').addClass('pairing-correct-mark');
+      self.$top.children('.h5p-popup-image').addClass('item-correct');
+
+    }
+
+    self.setIncorrect = function(){
+      self.$top.children('.pairing-mark').addClass('pairing-incorrect-mark');
+      self.$top.children('.h5p-popup-image').addClass('item-incorrect');
+    }
+
+    self.setSolved = function(){
+      self.$top.children('.pairing-mark').addClass('pairing-solved-mark');
+      self.$top.children('.h5p-popup-image').addClass('item-solved');
+    }
+
+    // self.show = function(desc, imgs, done) {
+    //   $desc.html(desc);
+    //   $top.html('').toggleClass('h5p-image-two-images', imgs.length > 1);
+    //   for (var i = 0; i < imgs.length; i++) {
+    //     $('<div class="h5p-popup-image"></div>').append(imgs[i]).appendTo($top);
+    //   }
+    //   $popup.show();
+    //   closed = done;
+    // };
+
+
     /**
      * Append card to the given container.
      *
@@ -84,27 +153,47 @@
      */
 
     self.appendTo = function($container) {
-      self.$card = $('<li class="h5p-image-pair-item " >' +
-        '<span class="h5p-image-pair-mark"></span>' +
-        '<div class="h5p-image-pair-card">' +
-        '<div class="image-unmatched">' +
-        '<img src="' + path + '" alt="' + description + '"/>' +
-        '</div>' +
-        '<div class="image-matched">' +
-        '<img src="' + path + '" alt="' + description + '"/>' +
-        '</div>' +
-        '</div>' +
-        '</li>').appendTo($container);
-      self.$card.children('.h5p-image-pair-card')
-        .children('.image-unmatched')
-        .click(function() {
-          self.trigger('selected');
-        })
-        .end();
+      // self.$card = $('<li class="h5p-image-pair-item " >' +
+      //   '<span class="h5p-image-pair-mark"></span>' +
+      //   '<div class="h5p-image-pair-card">' +
+      //   '<div class="image-unmatched">' +
+      //   '<img src="' + path + '" alt="' + description + '"/>' +
+      //   '</div>' +
+      //   '<div class="image-matched">' +
+      //   '<img src="' + path + '" alt="' + description + '"/>' +
+      //   '</div>' +
+      //   '</div>' +
+      //   '</li>').appendTo($container);
+      // self.$card.children('.h5p-image-pair-card')
+      //   .children('.image-unmatched')
+      //   .click(function() {
+      //     self.trigger('selected');
+      //   })
+      //   .end();
+
+      self.$card = $('<li class="item">'+
+      '<div class="image-container">'+
+        '<img src="'+ path +'"/>'+
+      '</div>'+
+    '</li>').appendTo($container);
+
+     self.$card.click(function(){
+       self.trigger('selected');
+     }).end();
+
+    self.$card.hover(function(){
+      $(this).addClass('item-hover');
+    }, function(){
+      $(this).removeClass('item-hover');
+    });
+
     };
 
 
   };
+
+
+
 
   // Extends the event dispatcher
   ImagePair.Card.prototype = Object.create(EventDispatcher.prototype);

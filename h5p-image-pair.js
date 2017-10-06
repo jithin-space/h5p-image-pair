@@ -1,4 +1,4 @@
-H5P.ImagePair = (function(EventDispatcher, $) {
+H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
   /**
    * @class H5P.ImagePair
@@ -10,159 +10,190 @@ H5P.ImagePair = (function(EventDispatcher, $) {
     var self = this;
     EventDispatcher.call(self);
 
-    var clicked, timer, counter, popup;
-    var cards = [];
-    var numClicks = 0;
-    var revertBacks = [];
-    var removed = 0;
 
-    /**
-     * Revert the Incorrectly Selected Cards To Default State
-     */
-
-    var processRevertBacks = function() {
-      revertBacks[0].revertBack();
-      revertBacks[1].revertBack();
-      revertBacks.splice(0, 2);
-      numClicks -= 2;
-    };
-
-    /**
-     * Check two selected cards are correct
-     */
+    cards = [];
+    mates = [];
 
 
-    var check = function(card, mate, correct) {
-      if (mate !== correct) {
-        // Incorrect, must be scheduled for flipping back
-        card.setIncorrect();
-        mate.setIncorrect();
-        revertBacks.push(card);
-        revertBacks.push(mate);
-        setTimeout(function() {
-          processRevertBacks();
-        }, 800);
-        return;
-      }
 
-      // Remove them from the game.
-      card.remove();
-      mate.remove();
-      numClicks -= 2;
-      removed += 2;
-      var isFinished = (removed === cards.length);
-      var desc = card.getDescription();
-      if (desc !== undefined) {
-        timer.pause();
-        var imgs = [card.getImage()];
-        if (card.hasTwoImages) {
-          imgs.push(mate.getImage());
-        }
-        popup.show(desc, imgs, function() {
-          if (isFinished) {
-            // Game done
-            finished();
-          } else {
-            // Popup is closed, continue.
-            timer.play();
-          }
-        });
-      } else if (isFinished) {
-        finished();
-      }
-    };
-
-    /**
-     * When the Image Pairing Game is Finished
-     * Show feedback and create a retry button
-     */
-    var finished = function() {
-      timer.stop();
-      $feedback.addClass('h5p-show');
-
-      if (parameters.behaviour && parameters.behaviour.allowRetry) {
-        // Create retry button
-        var retryButton = createButton('reset', parameters.l10n.tryAgain || 'Reset', function() {
-
-          retryButton.classList.add('h5p-image-transout');
-          setTimeout(function() {
-            // Remove button on nextTick to get transition effect
-            self.$wrapper[0].removeChild(retryButton);
-          }, 300);
-
-          resetGame();
-        });
-        retryButton.classList.add('h5p-image-transin');
-        setTimeout(function() {
-          // Remove class on nextTick to get transition effect
-          retryButton.classList.remove('h5p-image-transin');
-        }, 0);
-
-        self.$wrapper[0].appendChild(retryButton); // Add to DOM
-      }
-
-    }
-
-    var createButton = function(name, label, action) {
-      var buttonElement = document.createElement('div');
-      buttonElement.classList.add('h5p-image-pair-' + name);
-      buttonElement.innerHTML = label;
-      buttonElement.setAttribute('role', 'button');
-      buttonElement.tabIndex = 0;
-      buttonElement.addEventListener('click', function(event) {
-        action.apply(buttonElement);
-      }, false);
-      buttonElement.addEventListener('keypress', function(event) {
-        if (event.which === 13 || event.which === 32) { // Enter or Space key
-          event.preventDefault();
-          action.apply(buttonElement);
-        }
-      }, false);
-      return buttonElement;
-    };
-
-    var resetGame = function()  {
-      removed = 0;
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].reset();
-      }
-
-      $feedback[0].classList.remove('h5p-show');
-      timer.reset();
-      counter.reset();
-      H5P.shuffleArray(cards);
-
-      self.$list.empty();
-
-
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].appendTo(self.$list);
-      }
-
-
-    };
-
-
+    var clicked, numClicks;
+    self.pairedCount = 0;
 
     var addCard = function(card, mate) {
+
+
       card.on('selected', function() {
         card.setSelected();
-        timer.play();
+        // timer.play();
         numClicks++;
         if (clicked !== undefined) {
-          var matie = clicked;
-          clicked = undefined;
-          setTimeout(function() {
-            check(card, matie, mate);
-          }, 800);
+          // var matie = clicked;
+          // clicked = undefined;
+          // setTimeout(function() {
+          //   check(card, matie, mate);
+          // }, 800);
+
+          clicked.removeSelection();
+          clicked = card;
+
         } else {
           clicked = card;
         }
 
-        counter.increment();
+        // counter.increment();
+
       });
+
+      mate.on('unpair', function() {
+
+        self.pairedCount--;
+        mate.pairingStatus = undefined;
+
+        if (self.$checkButton) {
+          self.$checkButton.remove();
+          self.$checkButton = undefined;
+        }
+        if (self.$retryButton) {
+          self.$retryButton.remove();
+          self.$retryButton = undefined;
+        }
+        if (self.$showSolutionButton) {
+          self.$showSolutionButton.remove();
+          self.$showSolutionButton = undefined;
+        }
+        if (self.$progressBar) {
+          self.$progressBar.$scoreBar.remove();
+          self.$progressBar = undefined;
+        }
+
+
+      });
+      mate.on('selected', function() {
+        // mate.setSelected();
+        numClicks++;
+        if (clicked !== undefined) {
+          // alert("need to merge");
+          // paired.splice([clicked,mate,card]);
+          // if(clicked == card){
+          //   mate.pairingStatus = true;
+          // }
+          // else{
+          //   mate.pairingStatus = false;
+          // }
+          mate.trigger('checkPair', clicked);
+          mate.$card.removeClass('reducer').droppable("option", "disabled", true);
+          mate.pair(clicked);
+          clicked.disable();
+          clicked = undefined;
+          self.pairedCount++;
+
+        }
+
+        if (self.pairedCount == cards.length) {
+          // alert("pairing completed");
+
+          self.showCheckButton();
+        }
+      });
+
+      mate.on('checkPair', function(pair) {
+        if (pair.data == card) {
+          mate.pairingStatus = true;
+        } else {
+          mate.pairingStatus = false;
+        }
+      });
+
+      mate.on('attachSolution', function() {
+        mate.$top.empty();
+        mate.pair(card);
+        mate.setSolved();
+      });
+
       cards.push(card);
+      mates.push(mate);
     };
+
+    self.showCheckButton = function() {
+      if (self.$checkButton == undefined) {
+        self.$checkButton = UI.createButton({
+          title: 'Submit',
+          click: function(event) {
+            // console.log(paired.length());
+            self.checkResult();
+          },
+          html: '<span><i class="fa fa-check" aria-hidden="true"></i></span>&nbsp;' + parameters.l10n.checkAnswer
+        });
+      }
+
+      self.$checkButton.appendTo(self.$wrapper);
+    }
+
+    self.showSolution = function() {
+
+      self.$showSolutionButton.remove();
+      for (var i = 0; i < mates.length; i++) {
+        if (mates[i].pairingStatus == false) {
+          mates[i].trigger('attachSolution');
+          mates[i].pairingStatus = true;
+        }
+      }
+    }
+
+    self.retry = function() {
+
+      if (self.$showSolutionButton) {
+        self.$showSolutionButton.remove();
+      }
+      self.$retryButton.remove();
+      for (var i = 0; i < mates.length; i++) {
+        mates[i].detach();
+        cards[i].$card.removeClass('disabled');
+      }
+      self.pairedCount = 0;
+
+    }
+
+    self.checkResult = function() {
+
+      score = 0;
+      for (var i = 0; i < mates.length; i++) {
+        if (mates[i].pairingStatus == true) {
+          mates[i].setCorrect();
+          score++;
+        } else if (mates[i].pairingStatus == false) {
+          mates[i].setIncorrect();
+        }
+      }
+
+      self.$checkButton.remove();
+      self.$retryButton = UI.createButton({
+        title: 'Submit',
+        click: function(event) {
+          // console.log(paired.length());
+          self.retry();
+        },
+        html: '<span><i class="fa fa-check" aria-hidden="true"></i></span>&nbsp;' + 'retry *'
+      });
+
+      if (score != cards.length) {
+        self.$showSolutionButton = UI.createButton({
+          title: 'Submit',
+          click: function(event) {
+            // console.log(paired.length());
+            self.showSolution();
+          },
+          html: '<span><i class="fa fa-check" aria-hidden="true"></i></span>&nbsp;' + 'show solution *'
+        });
+        self.$showSolutionButton.appendTo(self.$wrapper);
+      }
+      self.$progressBar = UI.createScoreBar(cards.length, 'scoreBarLabel');
+      self.$progressBar.setScore(score);
+      self.$progressBar.appendTo(self.$wrapper);
+      self.$retryButton.appendTo(self.$wrapper);
+
+    }
+
 
     var getCardsToUse = function() {
       var numCardsToUse = (parameters.behaviour && parameters.behaviour.numCardsToUse ? parseInt(parameters.behaviour.numCardsToUse) : 0);
@@ -186,7 +217,6 @@ H5P.ImagePair = (function(EventDispatcher, $) {
       return cardsToUse;
     };
 
-
     var cardsToUse = getCardsToUse();
 
     for (var i = 0; i < cardsToUse.length; i++) {
@@ -206,41 +236,89 @@ H5P.ImagePair = (function(EventDispatcher, $) {
 
         // Add cards to card list for shuffeling
         addCard(cardOne, cardTwo);
-        addCard(cardTwo, cardOne);
+        // addCard(cardTwo, cardOne);
       }
     }
 
-    H5P.shuffleArray(cards);
+
+
 
     self.attach = function($container) {
+
       self.$wrapper = $container.addClass('h5p-image-pair').html('');
       $('<div class="h5p-task-description">' + parameters.taskDescription + '</div>').appendTo($container);
-      self.$list = $('<ul />');
+      self.$gameContainer = $('<div class="gameContainer"/>');
+      self.$cardList = $('<ul class="cardContainer" />');
+      self.$mateList = $('<ul class="mateContainer"/>');
       for (var i = 0; i < cards.length; i++) {
-        cards[i].appendTo(self.$list);
+
+        cards[i].appendTo(self.$cardList);
+        cards[i].$card.attr("data-card", i);
+        mates[i].appendTo(self.$mateList);
+        mates[i].$card.addClass('droppable');
+        mates[i].$card.attr("data-mate", i);
+        cards[i].$card.draggable(
+
+          {
+            opacity: 0.7,
+            helper: "clone",
+            handle: "div",
+            revert: 'invalid',
+            stack: '.item',
+            start: function(event, ui) {
+              temp = $(this).data('card');
+              cards[temp].$card.addClass('reducer');
+            },
+            drag: function() {
+
+            },
+            stop: function() {
+              temp = $(this).data('card');
+              cards[temp].$card.removeClass('reducer');
+            }
+          });
+
       }
 
-      if (self.$list.children().length) {
-        self.$list.appendTo($container);
-        $feedback = $('<div class="h5p-feedback">' + parameters.l10n.feedback + '</div>').appendTo($container);
+      if (self.$cardList.children().length >= 0) {
+        self.$cardList.appendTo(self.$gameContainer);
+
+        self.$mateList.find('.droppable').droppable({
+          over: function(event, ui) {
+            temp2 = $(this).data('mate');
+            mates[temp2].$card.addClass('reducer');
+          },
+          out: function(event, ui) {
+            temp2 = $(this).data('mate');
+            mates[temp2].$card.removeClass('reducer');
+          },
+          drop: function(event, ui) {
+            temp = $(ui.draggable).data('card');
+            temp2 = $(this).data('mate');
+            cards[temp].$card.addClass('disabled');
+            mates[temp2].pair(cards[temp]);
+            mates[temp2].trigger('checkPair', cards[temp]);
+            mates[temp2].$card.removeClass('reducer').droppable("option", "disabled", true);
+            self.pairedCount++;
+            console.log(self.pairedCount);
+            if (self.pairedCount == cards.length) {
+              self.showCheckButton();
+            }
+          }
+        });
+
+        self.$cardList.find('img').disableSelection();
+        self.$mateList.find('img').disableSelection();
+        self.$mateList.appendTo(self.$gameContainer);
+        // $feedback = $('<div class="h5p-feedback">' + parameters.l10n.feedback + '</div>').appendTo($container);
+        self.$gameContainer.appendTo($container);
+        // self.$progressBar.appendTo($container);
 
         // Add status bar
-        var $status = $('<dl class="h5p-status">' +
-          '<dt>' + parameters.l10n.timeSpent + '</dt>' +
-          '<dd class="h5p-time-spent">0:00</dd>' +
-          '<dt>' + parameters.l10n.cardTurns + '</dt>' +
-          '<dd class="h5p-card-turns">0</dd>' +
-          '</dl>').appendTo($container);
-
-        counter = new ImagePair.Counter($status.find('.h5p-card-turns'));
-        timer = new ImagePair.Timer($status.find('.h5p-time-spent')[0]);
-        popup = new ImagePair.Popup($container, parameters.l10n);
-
-        $container.click(function() {
-          popup.close();
-        });
       }
+
     }
+
   };
 
 
@@ -249,4 +327,4 @@ H5P.ImagePair = (function(EventDispatcher, $) {
 
 
   return ImagePair;
-})(H5P.EventDispatcher, H5P.jQuery);
+})(H5P.EventDispatcher, H5P.jQuery, H5P.JoubelUI);
