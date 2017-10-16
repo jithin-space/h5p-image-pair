@@ -8,6 +8,7 @@
   "author":"JithinSpace",
   "license":"MIT",
   "machineName":"H5P.ImagePair",
+  "embedTypes": ["iframe"],
   "preloadedCss":[
     {
       "path":"h5p-image-pair.css"
@@ -19,23 +20,10 @@
     },
     {
       "path":"h5p-image-pair-card.js"
-    },
-    {
-      "path":"h5p-image-pair-counter.js"
-    },
-    {
-      "path":"h5p-image-pair-popup.js"
-    },
-    {
-      "path":"h5p-image-pair-timer.js"
     }
+
   ],
   "preloadedDependencies":[
-    {
-      "machineName":"H5P.Timer",
-      "majorVersion":0,
-      "minorVersion":4
-    },
     {
       "machineName":"FontAwesome",
       "majorVersion":4,
@@ -54,16 +42,13 @@
     }
   ],
   "editorDependencies":[
-    {
-      "machineName":"H5PEditor.ColorSelector",
-      "majorVersion":1,
-      "minorVersion":2
-    },
+  
     {
       "machineName":"H5PEditor.VerticalTabs",
       "majorVersion":1,
       "minorVersion":3
     }
+
 
   ]
 }

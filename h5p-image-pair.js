@@ -172,17 +172,22 @@ H5P.ImagePair = (function(EventDispatcher, $ , UI) {
 
 
         self.$feedbacks =  $('<div class="feedbackContainer" />');
+
+        var scoreText = parameters.l10n.score;
+        scoreText = scoreText.replace('@score', result).replace('@total', cards.length);
+        self.$feedbacks.html('<div class="feedbackText">'+scoreText+'</div>');
+
         self.$progressBar.appendTo(self.$feedbacks);
         self.$feedbacks.appendTo(self.$footer);
 
 
 
 
-      self.$retryButton = createButton(self.retry,'fa-check','Retry');
+      self.$retryButton = createButton(self.retry,'fa-repeat',parameters.l10n.tryAgain);
 
       if (result != cards.length) {
 
-        self.$showSolutionButton = createButton(self.showSolution,'fa-check','Show Solution');
+        self.$showSolutionButton = createButton(self.showSolution,'fa-eye',parameters.l10n.showSolution);
         self.$showSolutionButton.appendTo(self.$footer);
       }
 
@@ -236,10 +241,12 @@ H5P.ImagePair = (function(EventDispatcher, $ , UI) {
       }
     }
 
+    H5P.shuffleArray(cards);
+    H5P.shuffleArray(mates);
     self.attach = function($container){
 
       self.$wrapper = $container.addClass('h5p-image-pair').html('');
-      $('<div class="h5p-task-description">' + parameters.taskDescription + '</div>').appendTo($container);
+      $('<div class="h5p-pair-description">' + parameters.taskDescription + '</div>').appendTo($container);
       var $gameContainer = $('<div class="gameContainer"/>');
       var $cardList = $('<ul class="cardContainer" />');
       var $mateList = $('<ul class="mateContainer"/>');

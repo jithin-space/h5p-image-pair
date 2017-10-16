@@ -1,18 +1,39 @@
+
+
+.h5p-image-pair{
+
+  border: 2px solid #eeeeee;
+
+}
+
+.h5p-pair-description {
+    font-family: Helvetica, Arial, sans-serif;
+    color: #000000;
+    font-size: 1.125em;
+    margin-bottom: 0.8em;
+    padding:8px;
+    border-bottom: 2px solid #eeeeee;
+}
+
+.footerContainer {
+  border-top:2px solid #eeeeee;
+}
+
 .gameContainer{
   display: table;
-  table-layout: fixed;
+  table-layout: auto;
 
-  max-width:1200px;
+  max-width:1160px;
   width:auto;
-  border:solid 2px #eeeeee;
-  padding:16px;
+  border:0;
+  padding:0;
   margin-left:auto;
   margin-right:auto;
 }
 
 .gameContainer > ul {
   display: table-cell;
-  max-width:49%;
+  max-width: 576px;
   width:auto;
   float:left;
   border: solid 2px #eeeeee;
@@ -22,9 +43,9 @@
 }
 
 .item{
-  width:164px;
+  width:160px;
 	padding:6px;
-	height:164px;
+	height:160px;
 	float:left;
   border-radius: 6px 6px 6px 6px;
 	margin:8px;
@@ -33,8 +54,8 @@
 }
 
  .image-container{
-	width:164px;
-	height:164px;
+	width:160px;
+	height:160px;
 	-webkit-box-shadow: inset 0px 2px 74px 0px rgba(203,213,222,1);
 	-moz-box-shadow: inset 0px 2px 74px 0px rgba(203,213,222,1);
 	box-shadow: inset 0px 2px 74px 0px rgba(203,213,222,1);
@@ -45,8 +66,8 @@
   .image-container img{
     	width:100%;
     	height:auto;
-      max-height: 164px;
-      max-width:  164px;
+      max-height: 160px;
+      max-width:  160px;
     	position:absolute;
       top:0;
       bottom:0;
@@ -144,7 +165,7 @@ user-select: none;
 display: inline-block;
 line-height: 5.83em;
 /*position: relative;*/
-top: 74px;
+top: 72px;
 /*82-8*/
 left:-8px;
 border: 4px solid #ffffff;
@@ -152,8 +173,8 @@ box-sizing: border-box;
 -moz-box-sizing: border-box;
 /*border-radius: 4px;*/
 background: #f0f0f0;
-width: 82px;
-height: 82px;
+width: 80px;
+height: 80px;
 overflow: hidden;
 /*box-shadow: 0 0 1em rgba(125,125,125,0.5);*/
 background-size: cover;
@@ -174,8 +195,8 @@ border-radius:6px 6px 6px 6px;
 .h5p-popup-image img{
   width:100%;
   height:auto;
-  max-height: 82px;
-  max-width:  82px;
+  max-height: 80px;
+  max-width:  80px;
   position:absolute;
   top:0;
   bottom:0;
@@ -240,7 +261,168 @@ user-select: none;
   z-index: 0 !important;
 }
 
+.feedbackText{
+  display: block;
+  color: #1a73d9;
 
+}
 .feedbackContainer{
-  /*display:none;*/
+  padding-left: 8px;
+}
+
+.footerContainer{
+  padding-top:8px;
+}
+
+
+
+
+
+
+@media only screen and (min-width: 576px) {
+
+  .gameContainer{
+    max-width: 560px;
+  }
+
+  .gameContainer > ul {
+    max-width: 276px;
+  }
+  .item {
+    height: 106px;
+    width: 106px;
+  }
+  .image-container {
+    width: 106px;
+    height: 106px;
+  }
+  .image-container img{
+    max-width: 106px;
+    max-height: 106px;
+  }
+
+  .h5p-popup-image {
+    width: 53px;
+    height: 53px;
+    top:45px;
+  }
+
+  .h5p-popup-image img {
+    max-width: 53px;
+    max-height: 53px;
+  }
+
+
+
+}
+
+
+@media only screen and (min-width: 768px) {
+
+
+  .gameContainer{
+    max-width: 740px;
+  }
+  .gameContainer > ul {
+    max-width: 366px;
+  }
+  .item {
+    height: 150px;
+    width: 150px;
+  }
+  .image-container {
+    width: 150px;
+    height: 150px;
+  }
+  .image-container img{
+    max-width: 150px;
+    max-height: 150px;
+  }
+
+  .h5p-popup-image {
+    width: 75px;
+    height: 75px;
+    top:67px;
+  }
+
+  .h5p-popup-image img {
+    max-width: 75px;
+    max-height: 75px;
+  }
+
+
+}
+
+
+@media only screen and (min-width: 992px) {
+
+
+
+  .gameContainer{
+    max-width: 960px;
+  }
+  .gameContainer > ul {
+    max-width: 476px;
+  }
+  .item {
+    height: 126px;
+    width: 126px;
+  }
+  .image-container {
+    width: 126px;
+    height: 126px;
+  }
+  .image-container img{
+    max-width: 126px;
+    max-height: 126px;
+  }
+
+  .h5p-popup-image {
+    width: 63px;
+    height: 63px;
+    top:55px;
+  }
+
+  .h5p-popup-image img {
+    max-width: 63px;
+    max-height: 63px;
+  }
+
+
+}
+
+@media only screen and (min-width: 1200px){
+
+
+
+  .gameContainer{
+    max-width: 1160px;
+  }
+  .gameContainer > ul {
+    max-width: 576px;
+  }
+  .item {
+    height: 160px;
+    width: 160px;
+  }
+  .image-container {
+    width: 160px;
+    height: 160px;
+  }
+  .image-container img{
+    max-width: 160px;
+    max-height: 160px;
+  }
+
+  .h5p-popup-image {
+    width: 80px;
+    height: 80px;
+    top:72px;
+  }
+
+  .h5p-popup-image img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+
 }
