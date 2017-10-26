@@ -3,7 +3,7 @@
 		"label": "Task Description",
 		"name": "taskDescription",
 		"type": "text",
-		"default": "Pair The Images",
+		"default": "Drag images from the left to match them with corresponding images on the right",
 		"description": "A guide telling the user how to solve this task.",
 		"importance": "high"
 	},

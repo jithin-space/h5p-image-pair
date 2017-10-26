@@ -44,6 +44,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
         }
 
+        self.enablemates();
+
         clicked = card;
 
 
@@ -62,6 +64,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           clicked.disable();
           clicked = undefined;
           pairedCount++;
+
+          self.disablemates();
         }
 
         // show check button when all images are paired
@@ -144,6 +148,15 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       });
 
     };
+
+    self.enablemates = function(){
+      console.log('working');
+      self.$wrapper.find('.droppable').css("pointer-events","all");
+    }
+    self.disablemates = function(){
+      console.log('working');
+      self.$wrapper.find('.droppable').css("pointer-events","none");
+    }
     /* once the user paired all the images on the cardList
      * display the checkResult button
      * @public
@@ -156,6 +169,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       self.$checkButton = createButton(self.displayResult, 'fa-check', parameters.l10n.checkAnswer);
 
       self.$checkButton.appendTo(self.$footer);
+
+      self.trigger('resize');
     };
 
 
@@ -233,8 +248,15 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
       self.$retryButton.appendTo(self.$footer);
 
+      self.trigger('resize');
+
 
     };
+
+  //  self.resize = function(){
+  //    self.$wrapper.css("height","100%");
+  //  }
+
 
 
     /* Initialize an array with the parameter values;
@@ -329,7 +351,9 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           revert: 'invalid',
           start: function(event, ui) {
             var cardId = $(this).data('card');
-            cards[cardId].$card.addClass('h5p-pair-item-reduced');
+            cards[cardId].$card.addClass('h5p-pair-item-reduced').removeClass('h5p-pair-item-hover');
+            $cardList.find('.ui-draggable-dragging').removeClass('h5p-pair-item-hover');
+            $mateList.find('.droppable').css("border","2px dashed grey");
           },
           drag: function() {
 
@@ -338,6 +362,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
             var cardId = $(this).data('card');
             cards[cardId].$card.removeClass('h5p-pair-item-reduced');
             $mateList.find('.h5p-pair-item-reduced').removeClass('h5p-pair-item-reduced');
+            $mateList.find('.h5p-pair-item').css("border","").removeClass('h5p-pair-item-hover');
           }
         });
 
@@ -345,11 +370,11 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
         tolerance: 'intersect',
         over: function(event, ui) {
           var mateId = $(this).data('mate');
-          mates[mateId].$card.addClass('h5p-pair-item-reduced');
+          mates[mateId].$card.addClass('h5p-pair-item-reduced').css('border','2px dashed blue');
         },
         out: function(event, ui) {
           var mateId = $(this).data('mate');
-          mates[mateId].$card.removeClass('h5p-pair-item-reduced');
+          mates[mateId].$card.removeClass('h5p-pair-item-reduced').css('border','2px dashed grey');
         },
         drop: function(event, ui) {
           var cardId = $(ui.draggable).data('card');
@@ -357,7 +382,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           cards[cardId].$card.addClass('h5p-pair-item-disabled');
           mates[mateId].pair(cards[cardId]);
           mates[mateId].trigger('checkPair', cards[cardId]);
-          mates[mateId].$card.removeClass('h5p-pair-item-reduced').droppable("option", "disabled", true);
+          mates[mateId].$card.removeClass('h5p-pair-item-reduced').removeClass('droppable').droppable("option", "disabled", true);
           pairedCount++;
           // console.log(pairedCount);
           if (pairedCount == cards.length) {

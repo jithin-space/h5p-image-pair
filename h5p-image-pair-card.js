@@ -18,6 +18,22 @@
     EventDispatcher.call(self);
     var path = H5P.getPath(image.path, id);
 
+    var width,height;
+
+    if (image.width !== undefined && image.height !== undefined) {
+     if (image.width > image.height) {
+       width = '100%';
+       height = 'auto';
+     }
+     else {
+       height = '100%';
+       width = 'auto';
+     }
+   }
+   else {
+     width = height = '100%';
+   }
+
     /* get the image element of the current card
      * @public
      */
@@ -77,7 +93,7 @@
 
     self.transform = function() {
       // remove droppable property
-      self.$card.removeClass('h5p-pair-item-selected').droppable("option", "disabled", true);
+      self.$card.removeClass('h5p-pair-item-selected').removeClass('droppable').droppable("option", "disabled", true);
     };
 
     /* triggered on card when it is paired with a mate
@@ -86,6 +102,7 @@
 
     self.disable = function() {
       self.$card.removeClass('h5p-pair-item-selected').addClass('h5p-pair-item-disabled');
+
     };
 
     /* triggered on mate when pairing happens
@@ -123,7 +140,7 @@
     self.detach = function() {
       self.$card.removeClass('h5p-pair-images-paired').empty();
       $('<div class="image-container"></div>').append(self.srcImage).appendTo(self.$card);
-      self.$card.removeClass('h5p-pair-item-selected').droppable("option", "disabled", false);
+      self.$card.removeClass('h5p-pair-item-selected').addClass('droppable').removeClass('h5p-pair-item-hover').droppable("option", "disabled", false).css("pointer-events","none");
       self.trigger('unpair');
     };
 
@@ -137,9 +154,10 @@
 
       self.$card = $('<li class="h5p-pair-item">' +
         '<div class="image-container">' +
-        '<img src="' + path + '"/>' +
+        '<img src="' + path + '" style="width:' + width + ';height:' + height + '"/>' +
         '</div>' +
         '</li>').appendTo($container);
+
 
       self.$card.click(function() {
         self.trigger('selected');
