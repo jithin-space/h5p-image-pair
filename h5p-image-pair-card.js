@@ -115,8 +115,8 @@
       self.$top = self.$card;
       self.$top.html('').toggleClass('h5p-pair-images-paired', true);
       $('<span class="pairing-mark"></span>').appendTo(self.$top);
-      $('<div class="h5p-pair-card-paired front"></div>').append(pair.getImage()).appendTo(self.$top);
-      $('<div class="h5p-pair-card-paired"></div>').append(self.srcImage).appendTo(self.$top);
+      $('<div class="h5p-pair-card-paired front"><div class="overlay"></div></div>').append(pair.getImage()).appendTo(self.$top);
+      $('<div class="h5p-pair-card-paired"><div class="overlay"></div></div>').append(self.srcImage).appendTo(self.$top);
       self.$card.replaceWith(self.$top);
 
       //while clicking on either of the paired cards, trigger detach
@@ -126,11 +126,20 @@
       });
 
       self.$top.children('.h5p-pair-card-paired').hover(function() {
-        self.$top.removeClass('h5p-pair-item-hover');
+        // self.$top.removeClass('h5p-pair-item-hover');
         $(this).addClass('h5p-pair-item-hover');
+        $(this).siblings('div').addClass('h5p-pair-item-hover');
       }, function() {
         $(this).removeClass('h5p-pair-item-hover');
+        $(this).siblings('div').removeClass('h5p-pair-item-hover');
       });
+
+      self.isPaired = true;
+      // self.$top.on('hover',function(){
+      //   $(this).find('h5p-pair-card-paired').addClass('h5p-pair-item-hover');
+      // }, function(){
+      //     $(this).find('h5p-pair-card-paired').removeClass('h5p-pair-item-hover');
+      // });
     };
 
     /* triggerd user clicks on either of the card that is currently paired
@@ -138,6 +147,8 @@
      */
 
     self.detach = function() {
+
+      self.isPaired = false;
       self.$card.removeClass('h5p-pair-images-paired').empty();
       $('<div class="image-container"></div>').append(self.srcImage).appendTo(self.$card);
       self.$card.removeClass('h5p-pair-item-selected').addClass('droppable').removeClass('h5p-pair-item-hover').droppable("option", "disabled", false).css("pointer-events","none");
@@ -155,7 +166,8 @@
       self.$card = $('<li class="h5p-pair-item">' +
         '<div class="image-container">' +
         '<img src="' + path + '" style="width:' + width + ';height:' + height + '"/>' +
-        '</div>' +
+        '<div class="overlay"></div>'+
+        '</div>'+
         '</li>').appendTo($container);
 
 

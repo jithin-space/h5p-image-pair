@@ -2,7 +2,7 @@
 	"title": "Image Pair",
 	"description": "Pair appropriate images",
 	"majorVersion": 1,
-	"minorVersion": 2,
+	"minorVersion": 3,
 	"patchVersion": 0,
 	"runnable": 1,
 	"author": "JithinSpace",
@@ -33,7 +33,7 @@
 		{
 			"machineName": "H5P.JoubelUI",
 			"majorVersion": 1,
-			"minorVersion": 2
+			"minorVersion": 3
 		},
 		{
 			"machineName": "jQuery.ui",
