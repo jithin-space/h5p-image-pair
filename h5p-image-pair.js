@@ -70,11 +70,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           self.enablepairs();
         }
 
-        // show check button when all images are paired
-        if (pairedCount == cards.length) {
 
-          // self.showCheckButton();
-        }
 
 
       });
@@ -152,30 +148,23 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
     };
 
     self.enablemates = function(){
-      self.$wrapper.find('.droppable').addClass('eventEnabled');
+      self.$wrapper.find('.droppable').removeClass('eventDisabled').addClass('eventEnabled').addClass('greyDash');
     }
     self.disablemates = function(){
-      self.$wrapper.find('.droppable').removeClass('eventEnabled').addClass('eventDisabled');
+      self.$wrapper.find('.droppable').removeClass('eventEnabled').addClass('eventDisabled').removeClass('greyDash');
     }
 
     self.disablepairs = function(){
       //for disabling already paired elements
-      self.$wrapper.find('.h5p-pair-images-paired').addClass('visualDisable');
-      self.$wrapper.find('.droppable').css("border","2px dashed #b7b7b7");
-      // self.$wrapper.find('.droppable').on('mouseenter',function(){
-      //    $(this).css('border','2px dashed #1a73d9');
-      // });
-      // self.$wrapper.find('.droppable').on('mouseleave',function(){
-      //   $(this).css('border','');
-      // });
-
+      self.$wrapper.find('.h5p-pair-card-paired').removeClass('eventEnabled').addClass('visualDisable');
 
     }
 
     self.enablepairs = function(){
       //for disabling already paired elements
-      self.$wrapper.find('.h5p-pair-images-paired').removeClass('visualDisable').css("pointer-events","all");
-      self.$wrapper.find('.h5p-pair-item').css("border","").removeClass('h5p-pair-item-hover');
+      self.$wrapper.find('.h5p-pair-card-paired').removeClass('visualDisable').addClass('eventEnabled');
+      self.$wrapper.find('.h5p-pair-images-paired').removeClass('greyDash');
+
     }
     /* once the user paired all the images on the cardList
      * display the checkResult button
@@ -235,7 +224,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
       }
       pairedCount = 0;
-      self.$wrapper.find('.gameContainer').removeClass('Disable').css('pointer-events','all');
+      self.$wrapper.find('.gameContainer').removeClass('eventDisabled').addClass('eventEnabled');
       self.$wrapper.find('.h5p-pair-item-disabled').removeClass('h5p-pair-item-disabled');
 
     };
@@ -249,7 +238,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
       var result = prepareResult();
 
-      self.$wrapper.find('.gameContainer').addClass('Disable').css("pointer-events","none");
+      self.$wrapper.find('.eventEnabled').removeClass('eventEnabled').addClass('eventDisabled');
+
 
       self.$checkButton.remove();
 
@@ -286,9 +276,6 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
     };
 
-  //  self.resize = function(){
-  //    self.$wrapper.css("height","100%");
-  //  }
 
 
 
@@ -358,7 +345,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
       self.$wrapper = $container.addClass('h5p-pair').html('');
       $('<div class="h5p-game-desc">' + parameters.taskDescription + '</div>').appendTo($container);
-      var $gameContainer = $('<div class="gameContainer"/>');
+      var $gameContainer = $('<div class="gameContainer eventEnabled"/>');
       var $cardList = $('<ul class="cardContainer" />');
       var $mateList = $('<ul class="mateContainer"/>');
       self.$footer = $('<div class="footer-container"/>');
@@ -388,21 +375,21 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           revert: 'invalid',
           start: function(event, ui) {
             var cardId = $(this).data('card');
-            cards[cardId].$card.removeClass('h5p-pair-item-hover');
-            $cardList.find('.ui-draggable-dragging').removeClass('h5p-pair-item-hover').css('background-color','#eef1f4');;
-            $mateList.find('.droppable').css("border","2px dashed #b7b7b7");
+            cards[cardId].$card.removeClass('h5p-pair-item-hover').addClass('h5p-pair-item-disabled');
+            $cardList.find('.ui-draggable-dragging').removeClass('h5p-pair-item-hover');
+            $mateList.find('.droppable').addClass('greyDash');
 
-            $mateList.find('.h5p-pair-images-paired').addClass('visualDisable');
+            $mateList.find('.h5p-pair-card-paired').removeClass('eventEnabled').addClass('visualDisable');
           },
           drag: function() {
 
           },
           stop: function() {
             var cardId = $(this).data('card');
-            cards[cardId].$card.removeClass('h5p-pair-item-reduced');
-            $mateList.find('.h5p-pair-item-reduced').removeClass('h5p-pair-item-reduced');
-            $mateList.find('.h5p-pair-item').css("border","").removeClass('h5p-pair-item-hover');
-            $mateList.find('.h5p-pair-images-paired').removeClass('visualDisable');
+            cards[cardId].$card.removeClass('h5p-pair-item-disabled');
+            // $mateList.find('.h5p-pair-item-reduced').removeClass('h5p-pair-item-reduced');
+            $mateList.find('.h5p-pair-item').removeClass('greyDash').removeClass('h5p-pair-item-hover');
+            $mateList.find('.h5p-pair-card-paired').removeClass('visualDisable').addClass('eventEnabled');
           }
         });
 
@@ -410,25 +397,28 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
         tolerance: 'intersect',
         over: function(event, ui) {
           var mateId = $(this).data('mate');
-          mates[mateId].$card.addClass('h5p-pair-item-hover').css('border','2px dashed #1a73d9');
+          mates[mateId].$card.addClass('h5p-pair-item-hover').removeClass('greyDash').addClass('blueDash');
 
         },
         out: function(event, ui) {
           var mateId = $(this).data('mate');
-          mates[mateId].$card.removeClass('h5p-pair-item-hover').css('border','2px dashed #b7b7b7');
+          mates[mateId].$card.removeClass('h5p-pair-item-hover').removeClass('blueDash').addClass('greyDash');
         },
         drop: function(event, ui) {
           var cardId = $(ui.draggable).data('card');
           var mateId = $(this).data('mate');
-          cards[cardId].$card.addClass('h5p-pair-item-disabled');
+          setTimeout(
+               function(){
+                   cards[cardId].$card.addClass('h5p-pair-item-disabled');
+               },
+                   0.01
+           );
+
           mates[mateId].pair(cards[cardId]);
           mates[mateId].trigger('checkPair', cards[cardId]);
-          mates[mateId].$card.removeClass('h5p-pair-item-reduced').removeClass('droppable').droppable("option", "disabled", true);
+          mates[mateId].$card.removeClass('h5p-pair-item-hover').removeClass('droppable').removeClass('blueDash').droppable("option", "disabled", true);
           pairedCount++;
-          if (pairedCount == cards.length) {
-            // alert("showCheckButton");
-            // self.showCheckButton();
-          }
+
         }
       });
 
@@ -436,7 +426,6 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
         $cardList.appendTo($gameContainer);
         $mateList.appendTo($gameContainer);
 
-        $gameContainer.find('img').disableSelection();
 
         $gameContainer.appendTo($container);
         self.$footer.appendTo($container);

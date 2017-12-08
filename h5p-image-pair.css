@@ -236,7 +236,7 @@
 }
 
 .visualDisable div {
-
+    pointer-events: none;
 }
 
 .Disable div {
@@ -258,7 +258,6 @@
     background-size: cover;
     position: relative;
     border-radius: 6px 6px 6px 6px;
-    pointer-events: all;
 }
 
 .h5p-pair-card-paired img {
@@ -318,4 +317,11 @@
 
 .eventDisabled{
   pointer-events: none !important;
+}
+
+.greyDash{
+  border: 2px dashed #b7b7b7;
+}
+.blueDash{
+  border: 2px dashed #1a73d9;
 }
