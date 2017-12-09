@@ -7,37 +7,37 @@
    * @extends H5P.EventDispatcher
    * @param {Object} image
    * @param {number} id
-   * @param {string} [description]
    */
 
-  ImagePair.Card = function(image, id, description) {
+  ImagePair.Card = function(image, id) {
 
     /** @alias H5P.ImagePair.Card# */
     var self = this;
+
     // Initialize event inheritance
     EventDispatcher.call(self);
+
     var path = H5P.getPath(image.path, id);
 
-    var width,height;
+    self.isPaired = false;
+
+    var width, height;
 
     if (image.width !== undefined && image.height !== undefined) {
-     if (image.width > image.height) {
-       width = '100%';
-       height = 'auto';
-     }
-     else {
-       height = '100%';
-       width = 'auto';
-     }
-   }
-   else {
-     width = height = '100%';
-   }
+      if (image.width > image.height) {
+        width = '100%';
+        height = 'auto';
+      } else {
+        height = '100%';
+        width = 'auto';
+      }
+    } else {
+      width = height = '100%';
+    }
 
     /* get the image element of the current card
      * @public
      */
-
     self.getImage = function() {
       return self.$card.find('img').clone();
     };
@@ -45,58 +45,50 @@
     /*set a card to correct state
      * @public
      */
-
     self.setCorrect = function() {
-      self.$pairingMark.addClass('pairing-correct-mark');
-      self.$front.addClass('h5p-pair-item-correct');
-      self.$rear.addClass('h5p-pair-item-correct');
+      self.$pairingMark.addClass('correct-mark');
+      self.$front.addClass('pair-item-correct');
+      self.$rear.addClass('pair-item-correct');
     };
 
     /*set a card to incorrect state
      * @public
      */
-
     self.setIncorrect = function() {
-      self.$pairingMark.addClass('pairing-incorrect-mark');
-      self.$front.addClass('h5p-pair-item-incorrect');
-      self.$rear.addClass('h5p-pair-item-incorrect');
+      self.$pairingMark.addClass('incorrect-mark');
+      self.$front.addClass('pair-item-incorrect');
+      self.$rear.addClass('pair-item-incorrect');
     };
 
     /* set  card to solved state
      * @public
      */
-
     self.setSolved = function() {
-      self.$pairingMark.addClass('pairing-solved-mark');
-      self.$front.addClass('h5p-pair-item-solved');
-      self.$rear.addClass('h5p-pair-item-solved');
+      self.$pairingMark.addClass('solved-mark');
+      self.$front.addClass('pair-item-solved');
+      self.$rear.addClass('pair-item-solved');
     };
 
     /* set  card to selected state
      * @public
      */
-
-
-
     self.setSelected = function() {
-      self.$card.addClass('h5p-pair-item-selected');
+      self.$card.addClass('h5p-image-pair-item-selected');
     };
 
     /*remove  card from selected state
      * @public
      */
-
     self.removeSelected = function() {
-      self.$card.removeClass('h5p-pair-item-selected');
+      self.$card.removeClass('h5p-image-pair-item-selected');
     };
 
     /* triggerd on mate when it is paired. make its droppable propery disabled
      * @public
      */
-
     self.transform = function() {
       // remove droppable property
-      self.$card.removeClass('h5p-pair-item-selected').removeClass('droppable').droppable("option", "disabled", true);
+      self.$card.removeClass('h5p-image-pair-item-hover').removeClass('droppable').droppable("option", "disabled", true);
     };
 
     /* triggered on card when it is paired with a mate
@@ -104,37 +96,35 @@
      */
 
     self.disable = function() {
-      self.$card.removeClass('h5p-pair-item-selected').addClass('h5p-pair-item-disabled');
-
+      self.$card.removeClass('h5p-image-pair-item-selected').addClass('h5p-image-pair-item-disabled');
     };
 
     /* triggered on mate when pairing happens
      * @public
+     * @param {H5P.ImagePair.Card} pair
      */
-
     self.pair = function(pair) {
 
       self.srcImage = (self.srcImage) ? self.srcImage : self.getImage();
       self.$top = self.$card;
-      self.$top.html('').toggleClass('h5p-pair-images-paired', true);
+      self.$top.html('').toggleClass('h5p-image-pair-images-paired', true);
       self.$pairingMark = $('<span class="pairing-mark"></span>').appendTo(self.$top);
-      self.$front = $('<div class="h5p-pair-card-paired front"><div class="overlay"></div></div>').append(pair.getImage()).appendTo(self.$top);
-      self.$rear =$('<div class="h5p-pair-card-paired"><div class="overlay"></div></div>').append(self.srcImage).appendTo(self.$top);
+      self.$front = $('<div class="card-paired front"><div class="h5p-image-pair-overlay"></div></div>').append(pair.getImage()).appendTo(self.$top);
+      self.$rear = $('<div class="card-paired"><div class="h5p-image-pair-overlay"></div></div>').append(self.srcImage).appendTo(self.$top);
       self.$card.replaceWith(self.$top);
 
       //while clicking on either of the paired cards, trigger detach
-      self.$top.children('.h5p-pair-card-paired').on('click', function() {
-        pair.$card.removeClass('h5p-pair-item-disabled');
+      self.$top.children('.card-paired').on('click', function() {
+        pair.$card.removeClass('h5p-image-pair-item-disabled');
         self.detach();
       });
 
-      self.$top.children('.h5p-pair-card-paired').hover(function() {
-        // self.$top.removeClass('h5p-pair-item-hover');
-        $(this).addClass('h5p-pair-item-hover');
-        $(this).siblings('div').addClass('h5p-pair-item-hover');
+      self.$top.children('.card-paired').hover(function() {
+        $(this).addClass('h5p-image-pair-item-hover');
+        $(this).siblings('div').addClass('h5p-image-pair-item-hover');
       }, function() {
-        $(this).removeClass('h5p-pair-item-hover');
-        $(this).siblings('div').removeClass('h5p-pair-item-hover');
+        $(this).removeClass('h5p-image-pair-item-hover');
+        $(this).siblings('div').removeClass('h5p-image-pair-item-hover');
       });
 
       self.isPaired = true;
@@ -144,13 +134,11 @@
     /* triggerd user clicks on either of the card that is currently paired
      * @public
      */
-
     self.detach = function() {
-
       self.isPaired = false;
-      self.$card.removeClass('h5p-pair-images-paired').empty();
+      self.$card.removeClass('h5p-image-pair-images-paired').empty();
       $('<div class="image-container"></div>').append(self.srcImage).appendTo(self.$card);
-      self.$card.removeClass('h5p-pair-item-selected').addClass('droppable').removeClass('h5p-pair-item-hover').droppable("option", "disabled", false);
+      self.$card.removeClass('h5p-image-pair-item-selected').addClass('droppable').removeClass('h5p-image-pair-item-hover').droppable("option", "disabled", false);
       self.trigger('unpair');
     };
 
@@ -159,14 +147,13 @@
      *
      * @param {H5P.jQuery} $container
      */
-
     self.appendTo = function($container) {
 
-      self.$card = $('<li class="h5p-pair-item">' +
+      self.$card = $('<li class="h5p-image-pair-item">' +
         '<div class="image-container">' +
         '<img src="' + path + '" style="width:' + width + ';height:' + height + '"/>' +
-        '<div class="overlay"></div>'+
-        '</div>'+
+        '<div class="h5p-image-pair-overlay"></div>' +
+        '</div>' +
         '</li>').appendTo($container);
 
 
@@ -175,12 +162,10 @@
       }).end();
 
       self.$card.hover(function() {
-        $(this).addClass('h5p-pair-item-hover');
+        $(this).addClass('h5p-image-pair-item-hover');
       }, function() {
-        $(this).removeClass('h5p-pair-item-hover');
+        $(this).removeClass('h5p-image-pair-item-hover');
       });
-
-
     };
 
   };
