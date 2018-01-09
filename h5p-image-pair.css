@@ -8,7 +8,7 @@
     font-size: 1.125em;
     line-height: 1.125em;
     padding: 1em;
-    border-bottom: 2px solid #c7d0d8;
+    border-bottom: 1px solid #c7d0d8;
 }
 /*game-container*/
 
@@ -30,7 +30,7 @@
     list-style: none;
     padding-left: 1em;
     box-sizing: border-box;
-    border-bottom: 2px solid #c7d0d8;
+    border-bottom: 1px solid #c7d0d8;
 }
 .h5p-image-pair-item {
     width: 6.625em;
