@@ -8,30 +8,29 @@
     font-size: 1.125em;
     line-height: 1.125em;
     padding: 1em;
-    border: 2px solid #c7d0d8;
+    border-bottom: 2px solid #c7d0d8;
 }
 /*game-container*/
 
 .h5p-image-pair .game-container {
-    display: table;
+    display: inline-block;
     table-layout: auto;
-    max-width: 100%;
-    width: auto;
+    /*max-width: 100%;*/
+    width: 100%;
     padding: 0;
     margin-left: auto;
     margin-right: auto;
-    border-left: 2px solid #c7d0d8;
-    border-right: 2px solid #c7d0d8;
+
 }
 .h5p-image-pair .game-container > ul {
-    display: table-cell;
-    max-width: 50%;
-    width: auto;
+    width: 50%;
+    /*width: auto;*/
     float: left;
     margin: 0;
     list-style: none;
     padding-left: 1em;
     box-sizing: border-box;
+    border-bottom: 2px solid #c7d0d8;
 }
 .h5p-image-pair-item {
     width: 6.625em;
@@ -261,7 +260,7 @@
 
 .h5p-image-pair .footer-container {
     padding: 1em 1em 0 1em;
-    border: 2px solid #c7d0d8;
+
 }
 .h5p-image-pair .feedback-container {
     padding-left: 0.5em;
