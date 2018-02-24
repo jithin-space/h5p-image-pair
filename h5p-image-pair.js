@@ -1,4 +1,4 @@
-var H5P = H5P || {};
+
 H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
   /**
@@ -10,7 +10,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
    */
   function ImagePair(parameters, id) {
 
-    /* @alias H5P.ImagePair# */
+    // @alias H5P.ImagePair
     var self = this;
     // Initialize event inheritance
     EventDispatcher.call(self);
@@ -18,7 +18,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       mates = [];
     var clicked;
 
-    /*
+    /**
      * pushing the cards and mates to appropriate arrays and
      * defining various events on which each card should respondTo
      * @private
@@ -29,6 +29,9 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
       // while clicking on a card on cardList
       card.on('selected', function() {
+
+        self.triggerXAPI('interacted');
+        
         if (clicked === undefined) {
           card.setSelected();
           self.prepareMateContainer();
@@ -87,7 +90,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       mates.push(mate);
     };
 
-    /* calculate the score and mark the correct and
+    /**
+     * calculate the score and mark the correct and
      * incorrect paired card
      * @private
      */
@@ -104,11 +108,12 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       return score;
     };
 
-    /* Generic Function to create buttons for the game
+    /**
+     * Generic Function to create buttons for the game
      * @private
-     * @param {{ function }} callback
-     * @param {{ String }} icon
-     * @param {{ String }} name
+     * @param  callback
+     * @param {string} icon
+     * @param {string} name
      */
     var createButton = function(callback, icon, name) {
       return UI.createButton({
@@ -120,7 +125,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       });
     };
 
-    /* function that defines the changes that needs to be applied on the right side
+    /**
+     * function that defines the changes that needs to be applied on the right side
      * when a left side element is selected
      * @public
      */
@@ -141,7 +147,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       }
     };
 
-    /* function that defines the changes that needs to be applied on the right side
+    /**
+     * function that defines the changes that needs to be applied on the right side
      * after a selected element is successfully dropped
      * @public
      */
@@ -166,7 +173,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
     };
 
 
-    /* display the checkResult button
+    /**
+     * display the checkResult button
      * @public
      */
     self.showCheckButton = function() {
@@ -174,7 +182,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       self.$checkButton.appendTo(self.$footer);
     };
 
-    /* triggerd when showSolution button is clicked
+    /**
+     * triggerd when showSolution button is clicked
      * @public
      */
     self.showSolution = function() {
@@ -190,7 +199,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       }
     };
 
-    /* triggerd when user clicks the retry button
+    /**
+     * triggerd when user clicks the retry button
      * @public
      */
     self.retry = function() {
@@ -207,7 +217,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       self.$wrapper.find('.h5p-image-pair-item-disabled').removeClass('h5p-image-pair-item-disabled');
     };
 
-    /* triggerd when user clicks the check button
+    /**
+     * triggerd when user clicks the check button
      * @public
      */
     self.displayResult = function() {
@@ -228,7 +239,11 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       self.$progressBar.appendTo(self.$feedbacks);
       self.$feedbacks.appendTo(self.$footer);
 
-      self.$retryButton = createButton(self.retry, 'fa-repeat', parameters.l10n.tryAgain);
+      if(parameters.behaviour.allowRetry){
+        self.$retryButton = createButton(self.retry, 'fa-repeat', parameters.l10n.tryAgain);
+      }
+
+
 
       // if all cards are not correctly paired
       if (result != cards.length) {
@@ -237,6 +252,12 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       }
 
       self.$retryButton.appendTo(self.$footer);
+
+      var completedEvent = self.createXAPIEventTemplate('completed');
+      completedEvent.setScoredResult(result,cards.length, self, true, score===cards.length);
+      self.trigger(completedEvent);
+
+
       self.trigger('resize');
 
     };
@@ -244,7 +265,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
 
 
-    /* Initialize an array with the parameter values;
+    /**
+     * Initialize an array with the parameter values;
      * @private
      */
     var getCardsToUse = function() {
@@ -278,15 +300,15 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       var cardParams = cardsToUse[i];
       if (ImagePair.Card.isValid(cardParams)) {
         // Create first card
-        var cardTwo, cardOne = new ImagePair.Card(cardParams.image, id);
+        var cardTwo, cardOne = new ImagePair.Card(cardParams.image, id , cardParams.imageAlt);
 
         if (ImagePair.Card.hasTwoImages(cardParams)) {
           // Use matching image for card two
-          cardTwo = new ImagePair.Card(cardParams.match, id);
+          cardTwo = new ImagePair.Card(cardParams.match, id , cardParams.matchAlt);
           cardOne.hasTwoImages = cardTwo.hasTwoImages = true;
         } else {
           // Add two cards with the same image
-          cardTwo = new ImagePair.Card(cardParams.image, id);
+          cardTwo = new ImagePair.Card(cardParams.image, id , cardParams.imageAlt);
         }
 
         // Add cards to card list for shuffeling
@@ -305,6 +327,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
      */
     self.attach = function($container) {
 
+      self.triggerXAPI('attempted');
+
       self.$wrapper = $container.addClass('h5p-image-pair').html('');
       $('<div class="h5p-image-pair-desc">' + parameters.taskDescription + '</div>').appendTo($container);
       self.$gameContainer = $('<div class="game-container event-enabled"/>');
@@ -320,7 +344,6 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
 
         cards[i].appendTo($cardList);
         mates[i].appendTo($mateList);
-
         cards[i].$card.attr("data-card", i);
         cards[i].$card.addClass("draggable");
         mates[i].$card.addClass('droppable');
@@ -336,6 +359,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           handle: "div",
           revert: 'invalid',
           start: function(event, ui) {
+            self.triggerXAPI('interacted');
             var cardId = $(this).data('card');
             cards[cardId].$card.removeClass('h5p-image-pair-item-hover').removeClass('h5p-image-pair-item-selected').addClass('h5p-image-pair-item-disabled');
             $cardList.find('.ui-draggable-dragging').removeClass('h5p-image-pair-item-hover');

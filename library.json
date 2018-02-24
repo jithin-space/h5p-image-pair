@@ -38,8 +38,7 @@
 		{
 			"machineName": "jQuery.ui",
 			"majorVersion": 1,
-			"minorVersion": 10,
-			"defaultStyles": true
+			"minorVersion": 10
 		}
 	],
 	"editorDependencies": [

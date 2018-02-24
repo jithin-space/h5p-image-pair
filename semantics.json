@@ -35,6 +35,13 @@
 					"ratio": 1
 				},
 				{
+				 "name": "imageAlt",
+				 "type": "text",
+				 "label": "Alternative text for Image",
+				 "importance": "high",
+				 "description": "Describe what can be seen in the photo. The text is read by text-to-speech tools needed by visually impaired users."
+			 },
+				{
 					"name": "match",
 					"type": "image",
 					"label": "Matching Image",
@@ -42,7 +49,15 @@
 					"optional": true,
 					"description": "An optional image to match against instead of using two cards with the same image.",
 					"ratio": 1
-				}
+				},
+				{
+          "name": "matchAlt",
+          "type": "text",
+          "label": "Alternative text for Matching Image",
+          "importance": "low",
+          "optional": true,
+          "description": "Describe what can be seen in the photo. The text is read by text-to-speech tools needed by visually impaired users."
+        }
 			]
 		}
 	},
@@ -54,15 +69,6 @@
 		"description": "These options will let you control how the game behaves.",
 		"optional": true,
 		"fields": [
-			{
-				"name": "numCardsToUse",
-				"type": "number",
-				"label": "Number of cards to use",
-				"description": "Setting this to a number greater than 2 will make the game pick random cards from the list of cards.",
-				"importance": "low",
-				"optional": true,
-				"min": 2
-			},
 			{
 				"name": "allowRetry",
 				"type": "boolean",

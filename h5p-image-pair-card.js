@@ -7,17 +7,20 @@
    * @extends H5P.EventDispatcher
    * @param {Object} image
    * @param {number} id
+   * @param {string} alt
    */
 
-  ImagePair.Card = function(image, id) {
+  ImagePair.Card = function(image, id , alt) {
 
-    /** @alias H5P.ImagePair.Card# */
+    // @alias H5P.ImagePair.Card#
     var self = this;
 
     // Initialize event inheritance
     EventDispatcher.call(self);
 
     var path = H5P.getPath(image.path, id);
+
+    alt = alt || 'Missing description';
 
     self.isPaired = false;
 
@@ -35,14 +38,16 @@
       width = height = '100%';
     }
 
-    /* get the image element of the current card
+    /**
+     * get the image element of the current card
      * @public
      */
     self.getImage = function() {
       return self.$card.find('img').clone();
     };
 
-    /*set a card to correct state
+    /**
+     * set a card to correct state
      * @public
      */
     self.setCorrect = function() {
@@ -51,7 +56,8 @@
       self.$rear.addClass('pair-item-correct');
     };
 
-    /*set a card to incorrect state
+    /**
+	   * set a card to incorrect state
      * @public
      */
     self.setIncorrect = function() {
@@ -60,7 +66,8 @@
       self.$rear.addClass('pair-item-incorrect');
     };
 
-    /* set  card to solved state
+    /**
+	   * set  card to solved state
      * @public
      */
     self.setSolved = function() {
@@ -69,21 +76,24 @@
       self.$rear.addClass('pair-item-solved');
     };
 
-    /* set  card to selected state
+    /**
+	   * set  card to selected state
      * @public
      */
     self.setSelected = function() {
       self.$card.addClass('h5p-image-pair-item-selected');
     };
 
-    /*remove  card from selected state
+    /**
+	   *remove  card from selected state
      * @public
      */
     self.removeSelected = function() {
       self.$card.removeClass('h5p-image-pair-item-selected');
     };
 
-    /* triggerd on mate when it is paired. make its droppable propery disabled
+    /**
+	   * triggerd on mate when it is paired. make its droppable propery disabled
      * @public
      */
     self.transform = function() {
@@ -91,7 +101,8 @@
       self.$card.removeClass('h5p-image-pair-item-hover').removeClass('droppable').droppable("option", "disabled", true);
     };
 
-    /* triggered on card when it is paired with a mate
+    /**
+	   * triggered on card when it is paired with a mate
      * @public
      */
 
@@ -99,7 +110,8 @@
       self.$card.removeClass('h5p-image-pair-item-selected').addClass('h5p-image-pair-item-disabled');
     };
 
-    /* triggered on mate when pairing happens
+    /**
+	   * triggered on mate when pairing happens
      * @public
      * @param {H5P.ImagePair.Card} pair
      */
@@ -131,7 +143,8 @@
 
     };
 
-    /* triggerd user clicks on either of the card that is currently paired
+    /**
+     * triggerd user clicks on either of the card that is currently paired
      * @public
      */
     self.detach = function() {
@@ -151,7 +164,7 @@
 
       self.$card = $('<li class="h5p-image-pair-item">' +
         '<div class="image-container">' +
-        '<img src="' + path + '" style="width:' + width + ';height:' + height + '"/>' +
+        '<img src="' + path + '" alt="' + alt + '" style="width:' + width + ';height:' + height + '"/>' +
         '<div class="h5p-image-pair-overlay"></div>' +
         '</div>' +
         '</li>').appendTo($container);
