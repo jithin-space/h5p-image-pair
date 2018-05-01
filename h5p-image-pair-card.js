@@ -10,7 +10,7 @@
    * @param {string} alt
    */
 
-  ImagePair.Card = function(image, id , alt) {
+  ImagePair.Card = function(image, id, alt) {
 
     // @alias H5P.ImagePair.Card#
     var self = this;
@@ -57,7 +57,7 @@
     };
 
     /**
-	   * set a card to incorrect state
+     * set a card to incorrect state
      * @public
      */
     self.setIncorrect = function() {
@@ -67,7 +67,7 @@
     };
 
     /**
-	   * set  card to solved state
+     * set  card to solved state
      * @public
      */
     self.setSolved = function() {
@@ -77,41 +77,80 @@
     };
 
     /**
-	   * set  card to selected state
+     * set  card to selected state
      * @public
      */
     self.setSelected = function() {
+      //for keyboard navigation
+      self.isSelected = true;
       self.$card.addClass('h5p-image-pair-item-selected');
     };
 
     /**
-	   *remove  card from selected state
+     *remove  card from selected state
      * @public
      */
     self.removeSelected = function() {
+      //for keyboard navigation
+      self.isSelected = false;
       self.$card.removeClass('h5p-image-pair-item-selected');
     };
 
+
+
     /**
-	   * triggerd on mate when it is paired. make its droppable propery disabled
+     * makTabbable - Make the card accessible when tabbing
+     */
+
+    self.makeTabbable = function() {
+      if (self.$card) {
+        self.$card.attr('tabindex', '0');
+      }
+    };
+
+
+    /**
+     *  Prevent tabbing to the card
+     */
+    self.makeUntabbable = function() {
+      if (self.$card) {
+        self.$card.attr('tabindex', '-1');
+      }
+    };
+
+    /**
+     *  Make card tabbable and move focus to it
+     */
+    self.setFocus = function() {
+      self.makeTabbable();
+      self.$card.focus();
+    }
+
+    /**
+     * triggerd on mate when it is paired. make its droppable propery disabled
      * @public
      */
     self.transform = function() {
       // remove droppable property
-      self.$card.removeClass('h5p-image-pair-item-hover').removeClass('droppable').droppable("option", "disabled", true);
+      self.$card.removeClass('h5p-image-pair-item-hover').removeClass(
+        'droppable').droppable("option", "disabled", true);
     };
 
     /**
-	   * triggered on card when it is paired with a mate
+     * triggered on card when it is paired with a mate
      * @public
      */
 
     self.disable = function() {
-      self.$card.removeClass('h5p-image-pair-item-selected').addClass('h5p-image-pair-item-disabled');
+
+      //for keyboard navigation
+      self.isPaired = true;
+      self.$card.removeClass('h5p-image-pair-item-selected').addClass(
+        'h5p-image-pair-item-disabled');
     };
 
     /**
-	   * triggered on mate when pairing happens
+     * triggered on mate when pairing happens
      * @public
      * @param {H5P.ImagePair.Card} pair
      */
@@ -120,9 +159,14 @@
       self.srcImage = (self.srcImage) ? self.srcImage : self.getImage();
       self.$top = self.$card;
       self.$top.html('').toggleClass('h5p-image-pair-images-paired', true);
-      self.$pairingMark = $('<span class="pairing-mark"></span>').appendTo(self.$top);
-      self.$front = $('<div class="card-paired front"><div class="h5p-image-pair-overlay"></div></div>').append(pair.getImage()).appendTo(self.$top);
-      self.$rear = $('<div class="card-paired"><div class="h5p-image-pair-overlay"></div></div>').append(self.srcImage).appendTo(self.$top);
+      self.$pairingMark = $('<span class="pairing-mark"></span>').appendTo(
+        self.$top);
+      self.$front = $(
+        '<div class="card-paired front"><div class="h5p-image-pair-overlay"></div></div>'
+      ).append(pair.getImage()).appendTo(self.$top);
+      self.$rear = $(
+        '<div class="card-paired"><div class="h5p-image-pair-overlay"></div></div>'
+      ).append(self.srcImage).appendTo(self.$top);
       self.$card.replaceWith(self.$top);
 
       //while clicking on either of the paired cards, trigger detach
@@ -136,7 +180,8 @@
         $(this).siblings('div').addClass('h5p-image-pair-item-hover');
       }, function() {
         $(this).removeClass('h5p-image-pair-item-hover');
-        $(this).siblings('div').removeClass('h5p-image-pair-item-hover');
+        $(this).siblings('div').removeClass(
+          'h5p-image-pair-item-hover');
       });
 
       self.isPaired = true;
@@ -150,8 +195,11 @@
     self.detach = function() {
       self.isPaired = false;
       self.$card.removeClass('h5p-image-pair-images-paired').empty();
-      $('<div class="image-container"></div>').append(self.srcImage).appendTo(self.$card);
-      self.$card.removeClass('h5p-image-pair-item-selected').addClass('droppable').removeClass('h5p-image-pair-item-hover').droppable("option", "disabled", false);
+      $('<div class="image-container"></div>').append(self.srcImage).appendTo(
+        self.$card);
+      self.$card.removeClass('h5p-image-pair-item-selected').addClass(
+        'droppable').removeClass('h5p-image-pair-item-hover').droppable(
+        "option", "disabled", false);
       self.trigger('unpair');
     };
 
@@ -164,11 +212,65 @@
 
       self.$card = $('<li class="h5p-image-pair-item">' +
         '<div class="image-container">' +
-        '<img src="' + path + '" alt="' + alt + '" style="width:' + width + ';height:' + height + '"/>' +
+        '<img src="' + path + '" alt="' + alt + '" style="width:' +
+        width + ';height:' + height + '"/>' +
         '<div class="h5p-image-pair-overlay"></div>' +
         '</div>' +
         '</li>').appendTo($container);
 
+
+      self.$card.on('keydown', function(event) {
+
+        switch (event.which) {
+          case 13: //enter
+            self.trigger('makeSelection');
+            event.preventDefault();
+            return;
+          case 32: //space
+            //toggle between card container & mate container
+            self.trigger('shiftContainer');
+            event.preventDefault();
+            return;
+          case 39: //Right
+          case 40: //Down
+            if (self.isPaired) {
+              // move to next pair
+              self.trigger('nextPair');
+            } else {
+              // move to the next card/mate
+              self.trigger('next');
+            }
+            return;
+          case 37: //Left
+          case 38: //Up
+            if (self.isPaired) {
+              //move to the previous pair
+              self.trigger('prevPair');
+            } else {
+              // move to the previous card/mate
+              self.trigger('prev');
+            }
+            return;
+          case 35: //End
+            if (self.isPaired) {
+              // move to the last pair
+              self.trigger('lastPair');
+            } else {
+              // move to the last card/mate
+              self.trigger('last');
+            }
+            return;
+          case 36: //Home
+            if (self.isPaired) {
+              // move to the first pair
+              self.trigger('firstPair');
+            } else {
+              // move to the first card/mate
+              self.trigger('first');
+            }
+            return;
+        }
+      });
 
       self.$card.click(function() {
         self.trigger('selected');
