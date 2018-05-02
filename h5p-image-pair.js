@@ -432,7 +432,7 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
           mates[i].detach();
           if(mates[i].currentPair){
               mates[i].currentPair.isPaired = false;
-          }    
+          }
         }
         cards[i].makeUntabbable();
         mates[i].makeUntabbable();
@@ -468,7 +468,8 @@ H5P.ImagePair = (function(EventDispatcher, $, UI) {
       self.$progressBar.appendTo(self.$feedbacks);
       self.$feedbacks.appendTo(self.$footer);
 
-      if (parameters.behaviour.allowRetry) {
+      if (parameters.behaviour) {
+        //set the value if retry is enabled
         self.$retryButton = createButton(self.retry, 'fa-repeat',
           parameters.l10n.tryAgain);
         self.$retryButton.appendTo(self.$footer);
