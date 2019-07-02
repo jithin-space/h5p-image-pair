@@ -1,0 +1,69 @@
+{
+  "semantics": [
+    {
+      "label": "Tehtävänkuvaus",
+      "default": "Yhdistä kuvaparit raahamalla kuvat vasemmalta oikealla olevien kuvien päälle"
+      "description": "Opastus käyttäjille miten tehtävä ratkaistaan"
+    },
+    {
+      "widgets": [
+        {
+          "label": "Oletus"
+        }
+      ],
+      "label": "Kortit",
+      "entity": "kortti",
+      "field": {
+        "label": "Kortti",
+        "fields": [
+          {
+            "label": "Kuva"
+          },
+          {
+            "label": "Kuvaileva teksti kuvalle",
+            "description": "Kuvaile mitä kuvassa näkyy, ruudunlukijat lukevat tämän tekstin ja se on tarkoitettu näkörajoitteisille henkilöille."
+          },
+          {
+            "label": "Kuvan pari",
+            "description": "Vapaaehtoinen kuva jos haluat että kuvan pari on eri kuva kuin alkuperäinen kuva"
+          },
+          {
+            "label": "Kuvaileva teksti kuvalle",
+            "description": "Kuvaile mitä kuvassa näkyy, ruudunlukijat lukevat tämän tekstin ja se on tarkoitettu näkörajoitteisille henkilöille."
+          }
+        ]
+      }
+    },
+    {
+      "label": "Lisäasetukset",
+      "description": "Nämä asetukset vaikuttavat siihen miten peli toimii",
+      "fields": [
+        {
+          "label": "Lisää yritä uudelleen painike kun peli on ohi"
+        }
+      ]
+    },
+    {
+      "label": "Lokalisaatio",
+      "fields": [
+        {
+          "label": "Teksti \"Check\" painikkeelle",
+          "default": "Tarkista"
+        },
+        {
+          "label": "Teksti \"Retry\" painikkeelle",
+          "default": "Yritä uudelleen"
+        },
+        {
+          "label": "Teksti \"ShowSolution\" painikkeelle",
+          "default": "Näytä vastaukset"
+        },
+        {
+          "label": "Palauteteksti",
+          "default": "Sait @score @total pisteestä",
+          "description": "Palauteteksti, käytettävissä olevat muuttujat: @score ja @total. Esimerkki: 'Sait @score @total mahdollisesta pisteestä'"
+        }
+      ]
+    }
+  ]
+}
