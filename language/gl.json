@@ -1,0 +1,69 @@
+{
+  "semantics": [
+    {
+      "label": "Descrición da tarefa",
+      "default": "Arrastra as imaxes da esquerda para emparellalas coas imaxes correspondentes da dereita",
+      "description": "Unha guía que explica ao usuario como resolver esta tarefa."
+    },
+    {
+      "widgets": [
+        {
+          "label": "Por defecto"
+        }
+      ],
+      "label": "Tarxetas",
+      "entity": "tarxeta",
+      "field": {
+        "label": "Tarxeta",
+        "fields": [
+          {
+            "label": "Imaxe"
+          },
+          {
+            "label": "Texto alternativo para a Imaxe",
+            "description": "Describe o que se ve na foto. Texto lido polas ferramentas de lectura de pantalla empregadas por persoas con minusvalía visual."
+          },
+          {
+            "label": "Imaxe Coincidente",
+            "description": "Unha imaxe opcional coa que coindicir en lugar de usar dúas tarxetas coa mesma imaxe."
+          },
+          {
+            "label": "Texto alternativo para Imaxe Coincidente",
+            "description": "Describe o que se ve na foto. Texto lido polas ferramentas de lectura de pantalla empregadas por persoas con minusvalía visual."
+          }
+        ]
+      }
+    },
+    {
+      "label": "Configuración do comportamento",
+      "description": "Estas opcións permitiranche controlar o comportamento do xogo.",
+      "fields": [
+        {
+          "label": "Engadir botón para reintentar ao rematar o xogo"
+        }
+      ]
+    },
+    {
+      "label": "Adaptación local",
+      "fields": [
+        {
+          "label": "Texto para o botón \"Comprobar\"",
+          "default": "Comprobar"
+        },
+        {
+          "label": "Texto para o botón \"Reintentar\"",
+          "default": "Reintentar"
+        },
+        {
+          "label": "Texto para o botón \"Amosar Solución\"",
+          "default": "Amosar Solución"
+        },
+        {
+          "label": "Texto de retroalimentación",
+          "default": "Conseguiches @score puntos de @total",
+          "description": "Texto de retroalimentación, variables dispoñibles: @score e @total. Exemplo: 'Conseguiches @score puntos de @total puntos posibles'"
+        }
+      ]
+    }
+  ]
+}
