@@ -1,0 +1,69 @@
+{
+  "semantics": [
+    {
+      "label": "Taakomschrijving",
+      "default": "Sleep de afbeeldingen van de linkerkant en koppel ze met de overeenkomstige afbeeldingen aan de rechterkant",
+      "description": "Een leidraad die de gebruiker vertelt hoe hij deze taak moet oplossen."
+    },
+    {
+      "widgets": [
+        {
+          "label": "Standaard"
+        }
+      ],
+      "label": "Kaarten",
+      "entity": "kaart",
+      "field": {
+        "label": "Kaart",
+        "fields": [
+          {
+            "label": "Afbeelding"
+          },
+          {
+            "label": "Alternatieve tekst voor een afbeelding",
+            "description": "Beschrijf wat er op de afbeelding te zien is. De tekst wordt voorgelezen door tekst-naar-spraak hulpmiddelen, die nodig zijn voor gebruikers met een visuele handicap."
+          },
+          {
+            "label": "Bijpassende afbeelding",
+            "description": "Een optionele afbeelding om te koppelen in plaats van twee kaarten met dezelfde afbeelding te gebruiken."
+          },
+          {
+            "label": "Alternatieve tekst voor een overeenstemmende afbeelding",
+            "description": "Beschrijf wat er op de afbeelding te zien is. De tekst wordt voorgelezen door tekst-naar-spraak hulpmiddelen, die nodig zijn voor gebruikers met een visuele handicap."
+          }
+        ]
+      }
+    },
+    {
+      "label": "Gedragsinstellingen",
+      "description": "Met deze opties kun je bepalen hoe het spel zich gedraagt.",
+      "fields": [
+        {
+          "label": "Voeg een opnieuw proberen knop toe voor als het spel is afgelopen"
+        }
+      ]
+    },
+    {
+      "label": "Lokalisatie",
+      "fields": [
+        {
+          "label": "Tekst voor \"Controleer\" knop",
+          "default": "Controleer"
+        },
+        {
+          "label": "Tekst voor \"Opnieuw\" knop",
+          "default": "Opnieuw"
+        },
+        {
+          "label": "Tekst voor \"Toon oplossing\" knop",
+          "default": "Toon oplossing"
+        },
+        {
+          "label": "Feedback tekst",
+          "default": "Je hebt @score van @total punten",
+          "description": "Feedback tekst, beschikbare variabelen: @score en @total. Voorbeeld: 'Je hebt @score van maximaal @total punten'"
+        }
+      ]
+    }
+  ]
+}
