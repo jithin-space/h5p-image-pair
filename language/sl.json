@@ -1,0 +1,69 @@
+{
+  "semantics": [
+    {
+      "label": "Navodilo udeležencem",
+      "default": "Povleci sliko iz leve strani k ujemajoči sliki na desni strani",
+      "description": "Opis reševanja zadane naloge."
+    },
+    {
+      "widgets": [
+        {
+          "label": "Privzeto"
+        }
+      ],
+      "label": "Pari",
+      "entity": "par",
+      "field": {
+        "label": "Par",
+        "fields": [
+          {
+            "label": "Slika"
+          },
+          {
+            "label": "Nadomestno besedilo za sliko",
+            "description": "Besedilo opisuje videno na sliki in služi bralnikom zaslona."
+          },
+          {
+            "label": "Ujemajoča slika",
+            "description": "Neobvezna slika za ujemanje para. V nasprotnem primeru bosta par sestavljali enaki sliki (iz prvega okna)."
+          },
+          {
+            "label": "Nadomestno besedilo za ujemajočo sliko",
+            "description": "Besedilo opisuje videno na ujemajoči sliki in služi bralnikom zaslona."
+          }
+        ]
+      }
+    },
+    {
+      "label": "Nastavitve interakcije",
+      "description": "Nastavitve omogočajo nadzor nad interakcijo aktivnosti za udeležence.",
+      "fields": [
+        {
+          "label": "Omogoči gumb \"Poskusi ponovno\""
+        }
+      ]
+    },
+    {
+      "label": "Določitev",
+      "fields": [
+        {
+          "label": "Besedilo za gumb \"Preveri\"",
+          "default": "Preveri"
+        },
+        {
+          "label": "Besedilo za gumb \"Poskusi ponovno\"",
+          "default": "Poskusi ponovno"
+        },
+        {
+          "label": "Besedilo za gumb \"Prikaži rešitev\"",
+          "default": "Prikaži rešitev"
+        },
+        {
+          "label": "Besedilo povratne informacije",
+          "default": "Dosežene točke: @score od @total",
+          "description": "@score in @total sta spremenljivki."
+        }
+      ]
+    }
+  ]
+}
